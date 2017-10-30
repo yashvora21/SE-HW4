@@ -44,11 +44,11 @@ function FunctionBuilder()
 	// The max number of conditions if one decision statement.
 	this.MaxConditions      = 0;
 	// Count no of string literals
-    this.StringLiterals = 0;
-    // Count no of return statements
-    this.ReturnStatements = 0;
-    // Max Message chain count
-    this.MaxMsgChain = 0;
+    	this.StringLiterals = 0;
+   	// Count no of return statements
+   	this.ReturnStatements = 0;
+    	// Max Message chain count
+    	this.MaxMsgChain = 0;
 
 	this.report = function()
 	{
@@ -61,10 +61,10 @@ function FunctionBuilder()
 				"MaxConditions: {4}\t" +
 				"Parameters: {5}\n\n" +
 				"ReturnStatements: {6}\t" +
-                "MaxMsgChain: {7}\n\n"
+                		"MaxMsgChain: {7}\n\n"
 			)
 			.format(this.FunctionName, this.StartLine,
-				    this.SimpleCyclomaticComplexity, this.MaxNestingDepth,this.MaxConditions,
+				this.SimpleCyclomaticComplexity, this.MaxNestingDepth,this.MaxConditions,
 			        this.ParameterCount, this.ReturnStatements, this.MaxMsgChain)
 		);
 	}
@@ -79,7 +79,7 @@ function FileBuilder()
 	// Number of imports in a file.
 	this.ImportCount = 0;
 	// Number of Conditions in a file
-    this.AllConditions = 0;
+    	this.AllConditions = 0;
 
 	this.report = function()
 	{
@@ -110,7 +110,7 @@ function traverseWithParents(object, visitor)
             if (typeof child === 'object' && child !== null && key != 'parent') 
             {
             	child.parent = object;
-				traverseWithParents(child, visitor);
+		traverseWithParents(child, visitor);
             }
         }
     }
@@ -141,7 +141,7 @@ function complexity(filePath)
 		}
 
 		// Number of conditions in file
-        fileBuilder.AllConditions += conditionsCount(node);
+        	fileBuilder.AllConditions += conditionsCount(node);
 
 		if (node.type === 'FunctionDeclaration') 
 		{
@@ -164,49 +164,47 @@ function complexity(filePath)
 			});
 
 			// Completing Workshop - Max conditions inside If
-            traverseWithParents(node, function (child) {
-                builder.MaxConditions = ifConditionsCount(builder.MaxConditions, child)
-            });
+            		traverseWithParents(node, function (child) {
+                	builder.MaxConditions = ifConditionsCount(builder.MaxConditions, child)
+           		});
 
-            // Completing Workshop - Max Nesting Depth
-            traverseWithParents(node, function (child) {
-                if (!isDecision(child) && child.left === undefined && child.right === undefined) {
-                    var count = maxNestingDepth(child);
-                    if (count > builder.MaxNestingDepth) {
-                        builder.MaxNestingDepth = count;
-                    }
-                }
-            });
-			
+            		// Completing Workshop - Max Nesting Depth
+            		traverseWithParents(node, function (child) {
+                		if (!isDecision(child) && child.left === undefined && child.right === undefined) {
+                    		    var count = maxNestingDepth(child);
+                    		    if (count > builder.MaxNestingDepth) {
+                        		builder.MaxNestingDepth = count;
+                    		    }
+               	 	        }
+            		});
+		
 			// Max Message Chain
-            traverseWithParents(node, function (child) {
-                if (child.type === "MemberExpression") {
-                    var max = 1;
-                    traverseWithParents(child.object, function (subChild) {
-                        if (subChild.type === 'MemberExpression') {
-                            max += 1;
-                        }
-                    });
-                    builder.MaxMsgChain = Math.max(builder.MaxMsgChain, max);
-                }
+            		traverseWithParents(node, function (child) {
+                		if (child.type === "MemberExpression") {
+                    			var max = 1;
+                    			traverseWithParents(child.object, function (subChild) {
+                        			if (subChild.type === 'MemberExpression') {
+                            				max += 1;
+                        			}
+                    			});
+                    		builder.MaxMsgChain = Math.max(builder.MaxMsgChain, max);
+                	        }
 			});
 			
 			// Number of Return Statements
-            traverseWithParents(node, function (child) {
-                if (child.type === "ReturnStatement") {
-                    builder.ReturnStatements++;
-                }
+            		traverseWithParents(node, function (child) {
+                	if (child.type === "ReturnStatement") {
+                    		builder.ReturnStatements++;
+                	}
 			});
 		}
 
 		// Number of Import statements - Package Complexity
-        if (node.type === 'CallExpression') {
-            if (node.callee.name === 'require')
-                fileBuilder.ImportCount++;
-        }
-
+        	if (node.type === 'CallExpression') {
+            		if (node.callee.name === 'require')
+                		fileBuilder.ImportCount++;
+        	}
 	});
-
 }
 
 // Helper function for counting children of node.

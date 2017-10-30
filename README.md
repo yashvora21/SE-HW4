@@ -8,7 +8,7 @@ This Repo has all the files related to HW4 of Software Engineering for Fall 17
 
 # Submission Contents:
 
-The results of the analysis on mystery.js using the following commands:
+The results of the analysis on **mystery.js** using the following command:
 ```
 node analysis.js mystery.js
 ```
